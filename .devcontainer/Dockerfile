@@ -23,4 +23,4 @@ RUN python3 -m pip install --no-cache-dir \
 WORKDIR /workspace
 
 # Default command
-CMD [ "bash" ]
+CMD ["sleep", "infinity"]
