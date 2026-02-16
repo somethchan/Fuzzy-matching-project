@@ -4,23 +4,22 @@ ENV DEBIAN_FRONTEND=noninteractive \
     PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1
 
-# Install Python
+USER root
+
+# Install Python tooling
 RUN apt-get update && apt-get install -y --no-install-recommends \
     python3 \
     python3-pip \
     python3-venv \
     && rm -rf /var/lib/apt/lists/*
 
-# Upgrade pip 
-RUN python3 -m pip install --upgrade pip
+# Create venv (avoids Ubuntu 24.04 pip restrictions)
+RUN python3 -m venv /opt/venv
+ENV PATH="/opt/venv/bin:$PATH"
 
-# Install Python dependencies
-RUN python3 -m pip install --no-cache-dir \
-    pandas \
-    rapidfuzz
+# Install deps in venv
+RUN pip install --no-cache-dir -U pip \
+ && pip install --no-cache-dir pandas rapidfuzz
 
-# Create working directory
+USER vscode
 WORKDIR /workspace
-
-# Default command
-CMD ["sleep", "infinity"]
